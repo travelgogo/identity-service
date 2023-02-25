@@ -39,7 +39,9 @@ public class TestUsers
                         new Claim(JwtClaimTypes.Email, "AliceSmith@email.com"),
                         new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
                         new Claim(JwtClaimTypes.WebSite, "http://alice.com"),
-                        new Claim(JwtClaimTypes.Address, JsonSerializer.Serialize(address), IdentityServerConstants.ClaimValueTypes.Json)
+                        new Claim(JwtClaimTypes.Address, JsonSerializer.Serialize(address), IdentityServerConstants.ClaimValueTypes.Json),
+                        new Claim(JwtClaimTypes.Role, "Admin"),
+                        new Claim(JwtClaimTypes.Role, "DH")
                     }
                 },
                 new TestUser

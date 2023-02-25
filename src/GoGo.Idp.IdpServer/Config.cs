@@ -33,7 +33,8 @@ public static class Config
                     JwtClaimTypes.Confirmation,
                     JwtClaimTypes.EmailVerified,
                     JwtClaimTypes.Id,
-                    JwtClaimTypes.Profile
+                    JwtClaimTypes.Profile,
+                    //JwtClaimTypes.Audience
                 }
             },
             new ApiScope 
@@ -57,6 +58,19 @@ public static class Config
             }
         };
 
+    public static IEnumerable<ApiResource> ApiResources => new ApiResource[]
+    {
+         new ApiResource("invoice", "Invoice API")
+        {
+            Scopes = { "invoice.read", "invoice.pay", "manage", "enumerate" }
+        },
+        
+        new ApiResource("product-data", "api resource product-data")
+        {
+            Scopes = { "payment-data", "product-data", "manage", "enumerate" }
+        }
+    };
+
     public static IEnumerable<Client> Clients =>
         new Client[]
         {
@@ -64,11 +78,11 @@ public static class Config
             {
                 ClientId = "L324F765-8D21-459V-HJ23-V32D9820962A",
                 ClientName = "Product service",
-
-                AllowedGrantTypes = GrantTypes.ClientCredentials,
+                AllowedGrantTypes =  GrantTypes.ClientCredentials,
                 ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
 
-                AllowedScopes = { "product-data", "payment-data" }
+                AllowedScopes = { "product-data", "payment-data" },
+                
             },
 
             // interactive client using code flow + pkce
@@ -91,6 +105,7 @@ public static class Config
                     IdentityServerConstants.StandardScopes.Profile,
                     "product-data"
                 },
+                
                 AllowedCorsOrigins = {"http://localhost:3000"}
             }
         };

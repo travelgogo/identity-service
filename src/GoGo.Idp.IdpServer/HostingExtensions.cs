@@ -16,7 +16,7 @@ internal static class HostingExtensions
         builder.Services.AddIdentityServer(options =>
             {
                 // https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/api_scopes#authorization-based-on-scopes
-                options.EmitStaticAudienceClaim = true;
+                //options.EmitStaticAudienceClaim = true;
             })
             .AddConfigurationStore(options =>
             {
@@ -86,6 +86,15 @@ internal static class HostingExtensions
                 foreach (var resource in Config.ApiScopes)
                 {
                     context.ApiScopes.Add(resource.ToEntity());
+                }
+                context.SaveChanges();
+            }
+
+            if (!context.ApiResources.Any())
+            {
+                foreach (var resource in Config.ApiResources)
+                {
+                    context.ApiResources.Add(resource.ToEntity());
                 }
                 context.SaveChanges();
             }
