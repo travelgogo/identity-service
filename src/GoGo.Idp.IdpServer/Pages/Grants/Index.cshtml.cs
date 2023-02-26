@@ -14,17 +14,17 @@ namespace GoGo.Idp.IdpServer.Pages.Grants;
 public class Index : PageModel
 {
     private readonly IIdentityServerInteractionService _interaction;
-    private readonly IClientStore _clients;
+    //private readonly IClientStore _clients;
     private readonly IResourceStore _resources;
     private readonly IEventService _events;
 
     public Index(IIdentityServerInteractionService interaction,
-        IClientStore clients,
+        //IClientStore clients,
         IResourceStore resources,
         IEventService events)
     {
         _interaction = interaction;
-        _clients = clients;
+        //_clients = clients;
         _resources = resources;
         _events = events;
     }
@@ -38,26 +38,26 @@ public class Index : PageModel
         var list = new List<GrantViewModel>();
         foreach (var grant in grants)
         {
-            var client = await _clients.FindClientByIdAsync(grant.ClientId);
-            if (client != null)
-            {
-                var resources = await _resources.FindResourcesByScopeAsync(grant.Scopes);
+            // var client = await _clients.FindClientByIdAsync(grant.ClientId);
+            // if (client != null)
+            // {
+            //     var resources = await _resources.FindResourcesByScopeAsync(grant.Scopes);
 
-                var item = new GrantViewModel()
-                {
-                    ClientId = client.ClientId,
-                    ClientName = client.ClientName ?? client.ClientId,
-                    ClientLogoUrl = client.LogoUri,
-                    ClientUrl = client.ClientUri,
-                    Description = grant.Description,
-                    Created = grant.CreationTime,
-                    Expires = grant.Expiration,
-                    IdentityGrantNames = resources.IdentityResources.Select(x => x.DisplayName ?? x.Name).ToArray(),
-                    ApiGrantNames = resources.ApiScopes.Select(x => x.DisplayName ?? x.Name).ToArray()
-                };
+            //     var item = new GrantViewModel()
+            //     {
+            //         ClientId = client.ClientId,
+            //         ClientName = client.ClientName ?? client.ClientId,
+            //         ClientLogoUrl = client.LogoUri,
+            //         ClientUrl = client.ClientUri,
+            //         Description = grant.Description,
+            //         Created = grant.CreationTime,
+            //         Expires = grant.Expiration,
+            //         IdentityGrantNames = resources.IdentityResources.Select(x => x.DisplayName ?? x.Name).ToArray(),
+            //         ApiGrantNames = resources.ApiScopes.Select(x => x.DisplayName ?? x.Name).ToArray()
+            //     };
 
-                list.Add(item);
-            }
+            //     list.Add(item);
+            // }
         }
 
         View = new ViewModel

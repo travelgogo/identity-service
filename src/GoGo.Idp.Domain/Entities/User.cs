@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using GoGo.Idp.Domain.Bases;
 
 namespace GoGo.Idp.Domain.Entities
@@ -15,5 +11,8 @@ namespace GoGo.Idp.Domain.Entities
         public bool IsActive { get; set; } = false;
         public bool IsDeleted { get; set; } = false;
         public bool IsRequireChangePassword { get; set; } = false;
+        public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+        public ICollection<UserClaim> UserClaims { get; set; } = new List<UserClaim>();
+
     }
 }

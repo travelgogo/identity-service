@@ -1,4 +1,6 @@
-﻿using GoGo.Idp.IdpServer;
+﻿using GoGo.Idp.Application;
+using GoGo.Idp.IdpServer;
+using GoGo.Idp.Infastructure;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -10,7 +12,8 @@ Log.Information("Starting up");
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-
+    builder.Services.AddAppExtension();
+    builder.Services.AddAppInfastructure(builder.Configuration);
     builder.Host.UseSerilog((ctx, lc) => lc
         .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
         .Enrich.FromLogContext()

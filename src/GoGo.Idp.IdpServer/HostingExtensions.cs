@@ -20,15 +20,15 @@ internal static class HostingExtensions
             })
             .AddConfigurationStore(options =>
             {
-                options.ConfigureDbContext = b => b.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"),
+                options.ConfigureDbContext = b => b.UseSqlServer(builder.Configuration["Azure:SqlServer:IdentityConnection"],
                     sql => sql.MigrationsAssembly(migrationsAssembly));
             })
             .AddOperationalStore(options =>
             {
-                options.ConfigureDbContext = b => b.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"),
+                options.ConfigureDbContext = b => b.UseSqlServer(builder.Configuration["Azure:SqlServer:IdentityConnection"],
                     sql => sql.MigrationsAssembly(migrationsAssembly));
-            })
-            .AddTestUsers(TestUsers.Users);
+            });
+            //.AddTestUsers(TestUsers.Users);
         // .AddExtensionGrantValidator<MemberGrantValidator>()
         // .AddExtensionGrantValidator<OperatorGrantValidator>();
 
@@ -43,7 +43,7 @@ internal static class HostingExtensions
         {
             app.UseDeveloperExceptionPage();
         }
-        InitializeDatabase(app);
+        //InitializeDatabase(app);
         app.UseStaticFiles();
         app.UseRouting();
 

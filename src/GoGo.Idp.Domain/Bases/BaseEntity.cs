@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using GoGo.Infrastructure.Repository;
 
 namespace GoGo.Idp.Domain.Bases
 {
-    public class BaseEntity : CoreEntity
+    public class BaseEntity : IEntity
     {
         public int Id { get; set; }
         public DateTime CreatedUtc { get; set; }

@@ -1,9 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+  <ItemGroup>
+    <PackageReference Include="GoGo.Infrastructure.Repository" Version="1.1.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GoGo.Idp.Domain\GoGo.Idp.Domain.csproj"/>
+  </ItemGroup>
 </Project>
