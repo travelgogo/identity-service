@@ -14,16 +14,18 @@ variables:
 
 steps:
 - task: UseDotNet@2
+  displayName: 'Build environment'
   inputs:
     packageType: 'sdk'
     version: '7.0.x'
 
 - task: NuGetAuthenticate@1
+  displayName: 'Authenticate NuGet'
   inputs:
     nuGetServiceConnections: 'GitHub TravelGoGo Nuget Packages'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Restore packages'
+  displayName: 'Restore NuGet packages'
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
