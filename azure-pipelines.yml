@@ -13,5 +13,25 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet build src/GoGo.Idp.IdpServer --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '7.0.x'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'restore'
+    projects: 'src/GoGo.Idp.IdpServer'
+    feedsToUse: 'config'
+    nugetConfigPath: '/'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: 'src/GoGo.Idp.IdpServer'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
