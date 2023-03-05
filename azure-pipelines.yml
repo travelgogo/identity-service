@@ -22,21 +22,23 @@ steps:
   inputs:
     nuGetServiceConnections: 'GitHub TravelGoGo Nuget Packages'
 
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
+  displayName: 'Restore packages'
   inputs:
     command: 'restore'
-    restoreSolution: '/'
+    projects: '**/*.csproj'
     feedsToUse: 'config'
-    nugetConfigPath: '/'
     externalFeedCredentials: 'GitHub TravelGoGo Nuget Packages'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Build project'
   inputs:
     command: 'build'
     projects: 'src/GoGo.Idp.IdpServer'
     arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Public project'
   inputs:
     command: 'publish'
     publishWebProjects: true
