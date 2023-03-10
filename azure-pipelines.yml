@@ -45,7 +45,7 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: true
-    arguments: '--projects=./**/*.IdpServer.csproj --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Public Artifacts: drop'
