@@ -7,6 +7,8 @@ https://oauth.net/2/
 
 https://docs.duendesoftware.com/identityserver/v6
 
+https://learn.microsoft.com/en-us/dotnet/architecture/cloud-native/identity-server
+
 ### Architecture
 Its source code architecture follows the Onion Architecture which was introduced by Jeffrey Palermo.
 
