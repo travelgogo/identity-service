@@ -7,6 +7,6 @@ services:
     image: gogoidpidpserver
     build:
       context: .
-      dockerfile: src/GoGo.Idp.IdpServer/Dockerfile
+      dockerfile: Dockerfile
     ports:
       - 5000:5000

@@ -35,5 +35,5 @@
                 "appProject": "${workspaceFolder}/src/GoGo.Idp.IdpServer/GoGo.Idp.IdpServer.csproj"
             }
         }
-    ]
+    ],
 }

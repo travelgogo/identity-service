@@ -1,0 +1,6 @@
+Server=tcp:gogo-sea-sql.database.windows.net,1433;Initial Catalog=Identity;Persist Security Info=False;User ID=gogo-sql-admin;Password=azurepassword123tT!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+
+Server=.\\SQLEXPRESS;Database=Identity;Trusted_Connection=True;TrustServerCertificate=True
+
+user:
+user@gmail.com/123456

@@ -6,5 +6,6 @@ namespace GoGo.Idp.Application.Contracts
     public interface IUserService
     {
         UserInfo?  GetUserAccount(string userName, string password);
+        Task<bool> CreateUserAccount(UserInfo user);
     }
 }

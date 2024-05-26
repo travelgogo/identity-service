@@ -10,7 +10,6 @@ namespace GoGo.Idp.IdpServer.GrantValidators
 
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
         {
-            await Task.Yield();
             var grantResult = new GrantValidationResult(TokenRequestErrors.InvalidRequest, "Member not found");
             var userName = context.Request.Raw.Get("username");
             var password = context.Request.Raw.Get("password");
@@ -27,7 +26,7 @@ namespace GoGo.Idp.IdpServer.GrantValidators
 
 
             }
-            context.Result = grantResult;
+            context.Result = await Task.FromResult(grantResult);
         }
 
         private static Claim[] IssueUserClaims(User user, bool isMemberLogin = false, bool isSocialLogin = false)

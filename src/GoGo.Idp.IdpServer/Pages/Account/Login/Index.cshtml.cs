@@ -45,9 +45,20 @@ public class Index : PageModel
 
     public async Task<IActionResult> OnGet(string returnUrl)
     {
-        var user = _userService.GetUserAccount("admin@gmail.com", "pwd123");
         await BuildModelAsync(returnUrl);
-            
+        View.ExternalProviders = new List<ViewModel.ExternalProvider>
+        {
+            new ViewModel.ExternalProvider
+            {
+                DisplayName = "Login with Google",
+                AuthenticationScheme = "google"
+            },
+            new ViewModel.ExternalProvider
+            {
+                DisplayName = "Login with Azure Active Directory",
+                AuthenticationScheme = "add"
+            }
+        };
         if (View.IsExternalLoginOnly)
         {
             // we only have one option for logging in and it's an external provider

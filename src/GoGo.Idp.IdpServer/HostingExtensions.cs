@@ -1,7 +1,12 @@
+using Duende.IdentityServer;
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
 using GoGo.Idp.IdpServer.GrantValidators;
+using GoGo.Idp.Infastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Serilog;
 
 namespace GoGo.Idp.IdpServer;
@@ -27,11 +32,28 @@ internal static class HostingExtensions
             {
                 options.ConfigureDbContext = b => b.UseSqlServer(builder.Configuration["Azure:SqlServer:IdentityConnection"],
                     sql => sql.MigrationsAssembly(migrationsAssembly));
-            });
-            //.AddTestUsers(TestUsers.Users);
+            })
+            .AddTestUsers(TestUsers.Users);
         // .AddExtensionGrantValidator<MemberGrantValidator>()
         // .AddExtensionGrantValidator<OperatorGrantValidator>();
 
+        builder.Services.AddAuthentication()
+            .AddGoogle("google", options => 
+            {
+                options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                options.ClientId = "1068885405661-ul1r2m37249fr1i5gvhnvqbvvdrnfmso.apps.googleusercontent.com";
+                options.ClientSecret = "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";
+                //options.Events.OnRemoteFailure = Handleremove
+            });
+            // .AddOpenIdConnect("google", "Google", options =>
+            // {
+            //     options.Authority = "https://accounts.google.com/o/oauth2/auth";
+            //     options.ClientId = "1068885405661-ul1r2m37249fr1i5gvhnvqbvvdrnfmso.apps.googleusercontent.com";
+            //     options.ClientSecret = "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";
+            //     options.ResponseType = OpenIdConnectResponseType.Code;
+            //     //options.cal
+            // });
+        IdentityModelEventSource.ShowPII = true;
         return builder.Build();
     }
 
@@ -43,12 +65,12 @@ internal static class HostingExtensions
         {
             app.UseDeveloperExceptionPage();
         }
-        //InitializeDatabase(app);
+        InitializeDatabase(app);
         app.UseStaticFiles();
         app.UseRouting();
 
         app.UseIdentityServer();
-
+        
         app.UseAuthorization();
         app.MapRazorPages().RequireAuthorization();
 
@@ -57,47 +79,66 @@ internal static class HostingExtensions
 
     private static void InitializeDatabase(IApplicationBuilder app)
     {
-        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+        serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+
+        var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+        context.Database.Migrate();
+        if (!context.Clients.Any())
         {
-            serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
-
-            var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-            context.Database.Migrate();
-            if (!context.Clients.Any())
+            foreach (var client in Config.Clients)
             {
-                foreach (var client in Config.Clients)
-                {
-                    context.Clients.Add(client.ToEntity());
-                }
-                context.SaveChanges();
+                context.Clients.Add(client.ToEntity());
             }
+            context.SaveChanges();
+        }
 
-            if (!context.IdentityResources.Any())
+        if (!context.IdentityResources.Any())
+        {
+            foreach (var resource in Config.IdentityResources)
             {
-                foreach (var resource in Config.IdentityResources)
-                {
-                    context.IdentityResources.Add(resource.ToEntity());
-                }
-                context.SaveChanges();
+                context.IdentityResources.Add(resource.ToEntity());
             }
+            context.SaveChanges();
+        }
 
-            if (!context.ApiScopes.Any())
+        if (!context.ApiScopes.Any())
+        {
+            foreach (var resource in Config.ApiScopes)
             {
-                foreach (var resource in Config.ApiScopes)
-                {
-                    context.ApiScopes.Add(resource.ToEntity());
-                }
-                context.SaveChanges();
+                context.ApiScopes.Add(resource.ToEntity());
             }
+            context.SaveChanges();
+        }
 
-            if (!context.ApiResources.Any())
+        if (!context.ApiResources.Any())
+        {
+            foreach (var resource in Config.ApiResources)
             {
-                foreach (var resource in Config.ApiResources)
-                {
-                    context.ApiResources.Add(resource.ToEntity());
-                }
-                context.SaveChanges();
+                context.ApiResources.Add(resource.ToEntity());
             }
+            context.SaveChanges();
+        }
+
+        var userContext = serviceScope.ServiceProvider.GetRequiredService<IdentityContext>();
+        userContext.Database.Migrate();
+        if (!userContext.Roles.Any())
+        {
+            foreach (var resource in Config.Roles)
+            {
+                userContext.Roles.Add(resource);
+            }
+            userContext.SaveChanges();
+        }
+
+        if (!userContext.Users.Any())
+        {
+            foreach (var resource in Config.Users)
+            {
+                userContext.Users.Add(resource);
+            }
+            userContext.SaveChanges();
         }
     }
+
 }

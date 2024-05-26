@@ -10,9 +10,9 @@ namespace GoGo.Idp.Application.Services
     class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IPasswordHasher<string> _passwordHasher;
 
-        public UserService(IUnitOfWork unitOfWork, IPasswordHasher<User> passwordHasher)
+        public UserService(IUnitOfWork unitOfWork, IPasswordHasher<string> passwordHasher)
         {
             _unitOfWork = unitOfWork;
             _passwordHasher = passwordHasher;
@@ -24,7 +24,7 @@ namespace GoGo.Idp.Application.Services
             if (user == null)
                 return null;
             
-            var verify = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
+            var verify = _passwordHasher.VerifyHashedPassword(userName, user.PasswordHash, password);
             if (user.IsActive && !user.IsRequireChangePassword && verify == PasswordVerificationResult.Success)
             {
                 return new UserInfo
@@ -49,6 +49,50 @@ namespace GoGo.Idp.Application.Services
             }
 
             return null;
+        }
+
+        public async Task<bool> CreateUserAccount(UserInfo userInfo)
+        {
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                var user = _unitOfWork.Repo<User>().GetAsync(x => x.Email == userInfo.Email, new string[] {"UserRoles.Role", "UserClaims"}).FirstOrDefault();
+                if (user != null)
+                {
+                    user.PasswordHash = _passwordHasher.HashPassword(user.Email, userInfo.Password);
+                    await _unitOfWork.Repo<User>().UpdateAsync(user);
+                }
+                else
+                {
+                    var entity = new User
+                    {
+                        Email = userInfo.Email,
+                        FirstName = userInfo.FirstName,
+                        LastName = userInfo.LastName,
+                        PasswordHash = _passwordHasher.HashPassword(userInfo.Email, userInfo.Password),
+                        IsActive = true,
+                        UserRoles = new List<UserRole>
+                        {
+                            new() 
+                            {
+                                RoleId = 1,
+                                IsActive = true
+                            }
+                        }
+                    };
+                    await _unitOfWork.Repo<User>().AddAsync(entity);
+                }
+                
+                await _unitOfWork.SaveChangeAsync();
+                await _unitOfWork.CommitTransactionAsync();
+                return true;
+            }
+            catch
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                return false;
+            }
+            
         }
     }
 }

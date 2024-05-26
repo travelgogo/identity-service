@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/da2f70f5-bc96-4d17-ab0e-fddabf02bf55/resourceGroups/travelgogo/providers/Microsoft.Web/sites/idp-sea-wa",
+    "appService.deploySubpath": "src\\GoGo.Idp.IdpServer\\bin\\Release\\net7.0\\publish"
+}
