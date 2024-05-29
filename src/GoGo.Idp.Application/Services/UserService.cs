@@ -20,10 +20,13 @@ namespace GoGo.Idp.Application.Services
 
         public UserInfo? GetUserAccount(string userName, string password)
         {
-            var user = _unitOfWork.Repo<User>().GetAsync(x => x.Email == userName, new string[] {"UserRoles.Role", "UserClaims"}).FirstOrDefault();
+            var user = _unitOfWork.Repo<User>()
+                .GetAsync(x => x.Email == userName, ["UserRoles.Role", "UserClaims"])
+                .FirstOrDefault();
+
             if (user == null)
                 return null;
-            
+
             var verify = _passwordHasher.VerifyHashedPassword(userName, user.PasswordHash, password);
             if (user.IsActive && !user.IsRequireChangePassword && verify == PasswordVerificationResult.Success)
             {
@@ -56,7 +59,7 @@ namespace GoGo.Idp.Application.Services
             await _unitOfWork.BeginTransactionAsync();
             try
             {
-                var user = _unitOfWork.Repo<User>().GetAsync(x => x.Email == userInfo.Email, new string[] {"UserRoles.Role", "UserClaims"}).FirstOrDefault();
+                var user = _unitOfWork.Repo<User>().GetAsync(x => x.Email == userInfo.Email, ["UserRoles.Role", "UserClaims"]).FirstOrDefault();
                 if (user != null)
                 {
                     user.PasswordHash = _passwordHasher.HashPassword(user.Email, userInfo.Password);

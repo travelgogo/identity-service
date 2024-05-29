@@ -119,6 +119,8 @@ public class Index : PageModel
                     };
                 };
                 var claims = user.Claims.Select(x => new System.Security.Claims.Claim(x.Type, x.Value)).ToList();
+                claims.Add(new System.Security.Claims.Claim("department_id", "sales"));
+                claims.Add(new System.Security.Claims.Claim("full_name", $"{user.FirstName} {user.LastName}"));
                 // issue authentication cookie with subject ID and username
                 var isuser = new IdentityServerUser(user.Id.ToString())
                 {

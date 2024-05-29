@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/GoGo.Idp.IdpServer/bin/Debug/net7.0/GoGo.Idp.IdpServer.dll",
+            "program": "${workspaceFolder}/src/GoGo.Idp.IdpServer/bin/Debug/net8.0/GoGo.Idp.IdpServer.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/GoGo.Idp.IdpServer",
             "stopAtEntry": false,

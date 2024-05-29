@@ -32,8 +32,8 @@ internal static class HostingExtensions
             {
                 options.ConfigureDbContext = b => b.UseSqlServer(builder.Configuration["Azure:SqlServer:IdentityConnection"],
                     sql => sql.MigrationsAssembly(migrationsAssembly));
-            })
-            .AddTestUsers(TestUsers.Users);
+            });
+            //.AddTestUsers(TestUsers.Users);
         // .AddExtensionGrantValidator<MemberGrantValidator>()
         // .AddExtensionGrantValidator<OperatorGrantValidator>();
 

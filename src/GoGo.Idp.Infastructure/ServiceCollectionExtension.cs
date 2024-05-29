@@ -17,6 +17,6 @@ namespace GoGo.Idp.Infastructure
 
             services.AddRepository<IdentityContext>();
         }
-        
+
     }
 }

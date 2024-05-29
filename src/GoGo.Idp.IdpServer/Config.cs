@@ -13,6 +13,14 @@ public static class Config
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
             new IdentityResources.Email(),
+            new ()
+            {
+                DisplayName = "User info",
+                Name = "user_info",
+                ShowInDiscoveryDocument = true,
+                Enabled = true,
+                UserClaims = [JwtClaimTypes.Role, JwtClaimTypes.NickName, "department_id", "full_name"]
+            }
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
@@ -84,7 +92,7 @@ public static class Config
         {
             Scopes = { "invoice.read", "invoice.pay", "manage", "enumerate" }
         },
-        
+
         new ApiResource("product-data", "api resource product-data")
         {
             Scopes = { "payment-data", "product-data", "manage", "enumerate" }
@@ -147,7 +155,7 @@ public static class Config
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
-                    "product-data"
+                    "user_info"
                 },
                 AlwaysIncludeUserClaimsInIdToken = true,
                 AllowedCorsOrigins = {"https://localhost:5050"}
@@ -184,7 +192,7 @@ public static class Config
         {
             FirstName = "Bob",
             LastName = "Nguyen",
-            Email = "user@gmail.com",
+            Email = "user@gmail.com", // password to login: pwd123
             PasswordHash = "AQAAAAIAAYagAAAAEF1yakGMB29YUJTaQsc29G9Pq9wA13uZC7N5GJbyVV4ONrHUkMuTltI3lIiS1mHzKA==",
             CreatedUtc = DateTime.UtcNow,
             IsActive = true,
@@ -224,7 +232,7 @@ public static class Config
         {
             FirstName = "Doe",
             LastName = "Nguyen",
-            Email = "admin@gmail.com",
+            Email = "admin@gmail.com",  // password to login: pwd123
             PasswordHash = "AQAAAAIAAYagAAAAEJHO8lBufGJ6oaYwyBZgwRTCnCNpcTxE4dOc8IhcqTatBr45r//pDOt71pOdvQqQ2A==",
             CreatedUtc = DateTime.UtcNow,
             IsActive = true,
